@@ -1,0 +1,139 @@
+name: bump (manual)
+
+# Manual fallback for rewriting Formula/llamastash.rb. The primary path is
+# llamastash/llamastash's release.yml, which clones this repo via PAT and
+# pushes a new formula directly on every tag (kdash pattern). Use this
+# workflow only when you need to hand-bump the formula — for example, after
+# a release.yml failure where the tap step crashed but the GH Release is
+# already published.
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Release tag without the leading 'v' (e.g. 0.2.0)"
+        required: true
+      sha256_aarch64_apple_darwin:
+        required: true
+      sha256_x86_64_apple_darwin:
+        required: true
+      sha256_aarch64_unknown_linux_gnu:
+        required: true
+      sha256_x86_64_unknown_linux_gnu:
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: resolve inputs
+        id: payload
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
+          INPUT_SHA_AARCH64_DARWIN: ${{ inputs.sha256_aarch64_apple_darwin }}
+          INPUT_SHA_X86_64_DARWIN: ${{ inputs.sha256_x86_64_apple_darwin }}
+          INPUT_SHA_AARCH64_LINUX: ${{ inputs.sha256_aarch64_unknown_linux_gnu }}
+          INPUT_SHA_X86_64_LINUX: ${{ inputs.sha256_x86_64_unknown_linux_gnu }}
+        run: |
+          set -euo pipefail
+          version="$INPUT_VERSION"
+          sha_aarch64_darwin="$INPUT_SHA_AARCH64_DARWIN"
+          sha_x86_64_darwin="$INPUT_SHA_X86_64_DARWIN"
+          sha_aarch64_linux="$INPUT_SHA_AARCH64_LINUX"
+          sha_x86_64_linux="$INPUT_SHA_X86_64_LINUX"
+
+          # Strip a leading 'v' if a tag (vX.Y.Z) was sent instead of a bare version.
+          version="${version#v}"
+
+          if ! printf '%s' "$version" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+(-[A-Za-z0-9.-]+)?$'; then
+            echo "::error::invalid version: $version"
+            exit 1
+          fi
+          for sha in "$sha_aarch64_darwin" "$sha_x86_64_darwin" "$sha_aarch64_linux" "$sha_x86_64_linux"; do
+            if ! printf '%s' "$sha" | grep -Eq '^[a-fA-F0-9]{64}$'; then
+              echo "::error::invalid sha256: $sha"
+              exit 1
+            fi
+          done
+
+          {
+            echo "version=$version"
+            echo "sha_aarch64_darwin=$sha_aarch64_darwin"
+            echo "sha_x86_64_darwin=$sha_x86_64_darwin"
+            echo "sha_aarch64_linux=$sha_aarch64_linux"
+            echo "sha_x86_64_linux=$sha_x86_64_linux"
+          } >>"$GITHUB_OUTPUT"
+
+      - name: rewrite formula
+        env:
+          VERSION: ${{ steps.payload.outputs.version }}
+          SHA_AARCH64_DARWIN: ${{ steps.payload.outputs.sha_aarch64_darwin }}
+          SHA_X86_64_DARWIN: ${{ steps.payload.outputs.sha_x86_64_darwin }}
+          SHA_AARCH64_LINUX: ${{ steps.payload.outputs.sha_aarch64_linux }}
+          SHA_X86_64_LINUX: ${{ steps.payload.outputs.sha_x86_64_linux }}
+        run: |
+          set -euo pipefail
+          formula="Formula/llamastash.rb"
+          tmp="$(mktemp)"
+
+          # The four per-target sha256 lines each follow a unique url line. We use
+          # a small awk program that latches onto the most-recently-seen url's
+          # target triple and substitutes the matching sha on the next sha256 line.
+          awk -v ver="$VERSION" \
+              -v sa_aarch64_darwin="$SHA_AARCH64_DARWIN" \
+              -v sa_x86_64_darwin="$SHA_X86_64_DARWIN" \
+              -v sa_aarch64_linux="$SHA_AARCH64_LINUX" \
+              -v sa_x86_64_linux="$SHA_X86_64_LINUX" '
+            BEGIN { target = "" }
+            /^[[:space:]]*version "/ {
+              sub(/version "[^"]*"/, "version \"" ver "\"")
+              print
+              next
+            }
+            /aarch64-apple-darwin\.tar\.gz"/ { target = "sa_aarch64_darwin" }
+            /x86_64-apple-darwin\.tar\.gz"/  { target = "sa_x86_64_darwin" }
+            /aarch64-unknown-linux-gnu\.tar\.gz"/ { target = "sa_aarch64_linux" }
+            /x86_64-unknown-linux-gnu\.tar\.gz"/  { target = "sa_x86_64_linux" }
+            /^[[:space:]]*sha256 "/ && target != "" {
+              if      (target == "sa_aarch64_darwin") sub(/"[^"]*"/, "\"" sa_aarch64_darwin "\"")
+              else if (target == "sa_x86_64_darwin")  sub(/"[^"]*"/, "\"" sa_x86_64_darwin "\"")
+              else if (target == "sa_aarch64_linux")  sub(/"[^"]*"/, "\"" sa_aarch64_linux "\"")
+              else if (target == "sa_x86_64_linux")   sub(/"[^"]*"/, "\"" sa_x86_64_linux "\"")
+              target = ""
+              print
+              next
+            }
+            { print }
+          ' "$formula" >"$tmp"
+
+          mv "$tmp" "$formula"
+          diff --color=always -u <(git show "HEAD:$formula") "$formula" || true
+
+      - name: brew style
+        run: |
+          set -euo pipefail
+          if ! command -v brew >/dev/null 2>&1; then
+            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" </dev/null
+            echo "/home/linuxbrew/.linuxbrew/bin" >>"$GITHUB_PATH"
+            export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
+          fi
+          brew style Formula/llamastash.rb
+
+      - name: commit + push
+        env:
+          VERSION: ${{ steps.payload.outputs.version }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet -- Formula/llamastash.rb; then
+            echo "formula already up to date for v$VERSION; nothing to commit"
+            exit 0
+          fi
+          git add Formula/llamastash.rb
+          git commit -m "chore(formula): bump llamastash to v$VERSION"
+          git push
