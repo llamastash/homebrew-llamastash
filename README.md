@@ -2,6 +2,12 @@
 
 Homebrew tap for [llamastash](https://github.com/llamastash/llamastash) — a fast, keyboard-driven TUI for launching local llama.cpp models.
 
+![Logo](https://raw.githubusercontent.com/llamastash/llamastash/main/assets/logo-h.jpg)
+
+**Zero-overhead, terminal-native `llama.cpp` launcher.**
+
+A fast TUI **and** CLI with init wizard for launching local LLMs via [llama.cpp](https://github.com/ggml-org/llama.cpp). One Rust binary that's a TUI, a CLI, a daemon, and an OpenAI-compatible proxy. Zero overhead vs raw `llama-server`.
+
 ## Install
 
 ```sh
