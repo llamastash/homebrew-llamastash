@@ -8,7 +8,7 @@
 class Llamastash < Formula
   desc "Fast, keyboard-driven TUI for launching local llama.cpp models"
   homepage "https://github.com/llamastash/llamastash"
-  version "0.0.1"
+  version "0.0.2"
   license "MIT"
 
   head do
@@ -19,22 +19,22 @@ class Llamastash < Formula
   on_macos do
     on_arm do
       url "https://github.com/llamastash/llamastash/releases/download/v#{version}/llamastash-#{version}-aarch64-apple-darwin.tar.gz"
-      sha256 "a53bed4cf6bbc508192d69969c436f683d6b30d2153f7ee387aa774c33fc2a36"
+      sha256 "781bd63506f9176dce980b6775f5e9f8bdc3ce5ac04e3abb9f7325e0d4a67156"
     end
     on_intel do
       url "https://github.com/llamastash/llamastash/releases/download/v#{version}/llamastash-#{version}-x86_64-apple-darwin.tar.gz"
-      sha256 "d50c4bbb9f9c8e4c14b6d63e41e193b073518663e0eda2cb6f0583d9e733b9f9"
+      sha256 "4dc5b025185b3ac1be0d229b6bab7b2f357e149269d00e2b7bf921f08f93d792"
     end
   end
 
   on_linux do
     on_arm do
       url "https://github.com/llamastash/llamastash/releases/download/v#{version}/llamastash-#{version}-aarch64-unknown-linux-gnu.tar.gz"
-      sha256 "9a2b709c54abea4865d05a7ee215ed01a3dcdd91ea6fa3575f004fffe784d4da"
+      sha256 "95efb433a815b8c8604673a784a73cbd7dfa1e1b1dba4789436097bceb886894"
     end
     on_intel do
       url "https://github.com/llamastash/llamastash/releases/download/v#{version}/llamastash-#{version}-x86_64-unknown-linux-gnu.tar.gz"
-      sha256 "298c19320b89589dd2c2b58538727ebaf73d009635c3c0a91c6921bfd249b6a4"
+      sha256 "841c6db10812023267fa1cdc85a0f6e59246eb48a3c42310f8e352047ec28e6a"
     end
   end
 
