@@ -6,9 +6,9 @@
 # Do not edit Formula/llamastash.rb in the tap repo by hand — it is
 # overwritten on every tag.
 class Llamastash < Formula
-  desc "Fast, keyboard-driven TUI for launching local llama.cpp models"
+  desc "Zero-overhead, terminal-native local-LLM launcher"
   homepage "https://github.com/llamastash/llamastash"
-  version "0.0.2"
+  version "0.0.3"
   license "MIT"
 
   head do
@@ -19,22 +19,22 @@ class Llamastash < Formula
   on_macos do
     on_arm do
       url "https://github.com/llamastash/llamastash/releases/download/v#{version}/llamastash-#{version}-aarch64-apple-darwin.tar.gz"
-      sha256 "781bd63506f9176dce980b6775f5e9f8bdc3ce5ac04e3abb9f7325e0d4a67156"
+      sha256 "e243712bd901e3cf024659705c82e95c960ae2afafbf15fbe7220202c83746e0"
     end
     on_intel do
       url "https://github.com/llamastash/llamastash/releases/download/v#{version}/llamastash-#{version}-x86_64-apple-darwin.tar.gz"
-      sha256 "4dc5b025185b3ac1be0d229b6bab7b2f357e149269d00e2b7bf921f08f93d792"
+      sha256 "4ad5eebba7b01724e1f256344193f5606902c817423b8023ea730cc0d6c288f4"
     end
   end
 
   on_linux do
     on_arm do
       url "https://github.com/llamastash/llamastash/releases/download/v#{version}/llamastash-#{version}-aarch64-unknown-linux-gnu.tar.gz"
-      sha256 "95efb433a815b8c8604673a784a73cbd7dfa1e1b1dba4789436097bceb886894"
+      sha256 "50c06c89484bb5cd3a91f33215312fbb7adce043635b5931e3e7db4b0e77b380"
     end
     on_intel do
       url "https://github.com/llamastash/llamastash/releases/download/v#{version}/llamastash-#{version}-x86_64-unknown-linux-gnu.tar.gz"
-      sha256 "841c6db10812023267fa1cdc85a0f6e59246eb48a3c42310f8e352047ec28e6a"
+      sha256 "f1471a5b5dcbe5dda016ab90a916e147c972852afc262b845502c616dee5fe5a"
     end
   end
 
