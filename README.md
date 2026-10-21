@@ -1,6 +1,6 @@
 # homebrew-llamastash
 
-Homebrew tap for [llamastash](https://github.com/llamastash/llamastash) — a zero-overhead, terminal-native local-LLM orchestrator. Run any engine, any model via the same proxy.
+Homebrew tap for [llamastash](https://github.com/llamastash/llamastash) — Zero-overhead, terminal-native local-LLM orchestrator. Run any engine, any model via the same proxy.
 
 ![Logo](https://raw.githubusercontent.com/llamastash/llamastash/main/assets/logo-h.jpg)
 
