@@ -1,12 +1,12 @@
 # homebrew-llamastash
 
-Homebrew tap for [llamastash](https://github.com/llamastash/llamastash) — a fast, keyboard-driven local-LLM launcher (zero-overhead on llama.cpp, with a pluggable backend seam).
+Homebrew tap for [llamastash](https://github.com/llamastash/llamastash) — a zero-overhead, terminal-native local-LLM orchestrator. Run any engine, any model via the same proxy.
 
 ![Logo](https://raw.githubusercontent.com/llamastash/llamastash/main/assets/logo-h.jpg)
 
-**Zero-overhead, terminal-native local-LLM launcher.**
+**Zero-overhead, terminal-native local-LLM orchestrator. Run any engine, any model via the same proxy.**
 
-A fast TUI **and** CLI with init wizard for launching local LLMs. One Rust binary that's a TUI, a CLI, a daemon, and an OpenAI-compatible proxy. [llama.cpp](https://github.com/ggml-org/llama.cpp) is the direct, zero-overhead backend (vs raw `llama-server`), behind a pluggable backend seam so other engines can plug in.
+A fast TUI **and** CLI with init wizard for running local LLMs. One Rust binary that's a TUI, a CLI, a daemon, and an OpenAI-compatible proxy. [llama.cpp](https://github.com/ggml-org/llama.cpp) is the direct, zero-overhead backend (vs raw `llama-server`), behind a pluggable backend seam so other engines can plug in.
 
 ## Install
 
