@@ -8,7 +8,7 @@
 class Llamastash < Formula
   desc "Zero-overhead, terminal-native local-LLM orchestrator"
   homepage "https://github.com/llamastash/llamastash"
-  version "0.11.0"
+  version "0.12.0"
   license "MIT"
 
   head do
@@ -19,22 +19,22 @@ class Llamastash < Formula
   on_macos do
     on_arm do
       url "https://github.com/llamastash/llamastash/releases/download/v#{version}/llamastash-#{version}-aarch64-apple-darwin.tar.gz"
-      sha256 "6a9c3096d4f87429d35f23141618dce9b837cd53c11f58ec5bc0a5ecf9377654"
+      sha256 "9ec645f2d8c364adf2ea3e0c5070f51f080b2f63ec7f3a00220d616f46b76cda"
     end
     on_intel do
       url "https://github.com/llamastash/llamastash/releases/download/v#{version}/llamastash-#{version}-x86_64-apple-darwin.tar.gz"
-      sha256 "e76e4bf04ac1ebb344aca1093dc99316799985273deb6310f73ea81f09a15cc5"
+      sha256 "4ef74126153440c0d168c998b5eeeb918a6ab9c6a0c6e2c8458da7b30801e386"
     end
   end
 
   on_linux do
     on_arm do
       url "https://github.com/llamastash/llamastash/releases/download/v#{version}/llamastash-#{version}-aarch64-unknown-linux-gnu.tar.gz"
-      sha256 "a92d60a9942cf7ac9b573ac506c70426a037989e80bbac21d603c304815a29af"
+      sha256 "6dfca3b1ad2b3f3d69168c49b15d784eb32117371358a89700e2e59bf6376f54"
     end
     on_intel do
       url "https://github.com/llamastash/llamastash/releases/download/v#{version}/llamastash-#{version}-x86_64-unknown-linux-gnu.tar.gz"
-      sha256 "dc840611ffe1892eacf8d006649c2b2d261324649e1260af3386d85fd87ba97c"
+      sha256 "b8e91002ea24c5f86ecef34c5ada361267df90bbb400c6b06ceb18ac67a4d62a"
     end
   end
 
